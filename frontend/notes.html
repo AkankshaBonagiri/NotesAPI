@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Notes</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f3f4f6;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 50px 0;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 500px;
+      text-align: center;
+    }
+    input, textarea {
+      width: 90%;
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    button {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1e40af;
+    }
+    #message {
+      margin-top: 10px;
+      font-size: 14px;
+      color: green;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin-top: 20px;
+    }
+    li {
+      background: #e5e7eb;
+      margin: 5px;
+      padding: 10px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logout-btn {
+      background-color: #dc2626;
+      margin-top: 20px;
+    }
+    .logout-btn:hover {
+      background-color: #b91c1c;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Your Notes</h2>
+
+    <textarea id="note-content" rows="4" placeholder="Write your note here..."></textarea>
+    <button onclick="addNote()">Add Note</button>
+    <p id="message"></p>
+
+    <ul id="notes-list"></ul>
+
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <script>
+    const token = localStorage.getItem("access");
+
+    if (!token) {
+      window.location.href = "login.html";
+    }
+
+    // ✅ Fetch all notes
+    async function fetchNotes() {
+      const response = await fetch("http://127.0.0.1:8000/api/notes/", {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        const notes = await response.json();
+        const list = document.getElementById("notes-list");
+        list.innerHTML = "";
+        notes.forEach(note => {
+          const li = document.createElement("li");
+          li.textContent = note.content;
+          const delBtn = document.createElement("button");
+          delBtn.textContent = "🗑️";
+          delBtn.onclick = () => deleteNote(note.id);
+          li.appendChild(delBtn);
+          list.appendChild(li);
+        });
+      } else if (response.status === 401) {
+        logout();
+      }
+    }
+
+    // ✅ Add a new note (Quick Fix - sends dummy title)
+    async function addNote() {
+  const content = document.getElementById("note-content").value.trim();
+  const token = localStorage.getItem("access");
+
+  if (!content) {
+    document.getElementById("message").innerText = "Note cannot be empty.";
+    return;
+  }
+
+  try {
+    const response = await fetch("http://127.0.0.1:8000/api/notes/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        title: "My Note",
+        content: content
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Error details:", errorData);
+      document.getElementById("message").innerText = "Failed to add note.";
+      return;
+    }
+
+    document.getElementById("note-content").value = "";
+    document.getElementById("message").innerText = "Note added!";
+    fetchNotes();
+
+  } catch (error) {
+    console.error("Network error:", error);
+    document.getElementById("message").innerText = "Network error. Please try again.";
+  }
+}
+
+    // ✅ Delete a note
+    async function deleteNote(id) {
+      const response = await fetch(`http://127.0.0.1:8000/api/notes/${id}/`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        fetchNotes();
+      }
+    }
+
+    // ✅ Logout
+    function logout() {
+      localStorage.removeItem("access");
+      window.location.href = "login.html";
+    }
+
+    // Load notes when page opens
+    fetchNotes();
+  </script>
+</body>
+</html>

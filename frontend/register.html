@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - Notes App</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f3f4f6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 350px;
+      text-align: center;
+    }
+    input {
+      width: 90%;
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    button {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1e40af;
+    }
+    #message {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    a {
+      display: block;
+      margin-top: 10px;
+      color: #2563eb;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Create Account</h2>
+    <input type="text" id="username" placeholder="Username" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="text" id="first_name" placeholder="First Name">
+    <input type="text" id="last_name" placeholder="Last Name">
+    <input type="password" id="password" placeholder="Password" required>
+    <input type="password" id="password2" placeholder="Confirm Password" required>
+    <button onclick="registerUser()">Register</button>
+    <p id="message"></p>
+    <a href="login.html">Already have an account? Login</a>
+  </div>
+
+  <script>
+    async function registerUser() {
+      const username = document.getElementById("username").value;
+      const email = document.getElementById("email").value;
+      const first_name = document.getElementById("first_name").value;
+      const last_name = document.getElementById("last_name").value;
+      const password = document.getElementById("password").value;
+      const password2 = document.getElementById("password2").value;
+
+      const response = await fetch("http://127.0.0.1:8000/api/register/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username,
+          email,
+          first_name,
+          last_name,
+          password,
+          password2,
+          role: "user"
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        document.getElementById("message").innerText = "Registration successful!";
+        setTimeout(() => window.location.href = "login.html", 1000);
+      } else {
+        document.getElementById("message").innerText =
+          data.password || data.detail || "Registration failed.";
+      }
+    }
+  </script>
+</body>
+</html>
