@@ -19,7 +19,7 @@ It allows users to:
 ### 1️⃣ Clone the Repository
 ```bash
 git clone https://github.com/AkankshaBonagiri/NotesAPI.git
-### 2️⃣ Create a Virtual Environment
+ **2️⃣ Create a Virtual Environment**
 python -m venv venv
 3️⃣ Activate the Virtual Environment
 Windows:
