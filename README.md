@@ -29,3 +29,4 @@ pip install -r requirements.txt
 5️⃣ Run the Development Server
 python manage.py runserver
 Then open your browser and go to 👉 http://127.0.0.1:8000/
+## set
