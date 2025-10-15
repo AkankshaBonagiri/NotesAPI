@@ -29,5 +29,17 @@ pip install -r requirements.txt
 ###5️⃣ Run the Development Server
 python manage.py runserver
 Then open your browser and go to 👉 http://127.0.0.1:8000/
-</details> <details> <summary><h3>4️⃣ Install Dependencies</h3></summary>
+🧩 Features
+Secure user authentication with JWT
+CRUD operations for notes
+Simple REST API endpoints
+Clean UI built with vanilla JS
+📁 Project Structure
+NotesAPI/
+│
+├── api/                # Django app for backend API
+├── frontend/           # HTML, CSS, JS files
+├── notes_project/      # Django project configuration
+├── manage.py
+└── .gitignore
 
