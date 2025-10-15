@@ -19,14 +19,14 @@ It allows users to:
 ### 1️⃣ Clone the Repository
 ```bash
 git clone https://github.com/AkankshaBonagiri/NotesAPI.git
-###2️⃣ Create a Virtual Environment
+2️⃣ Create a Virtual Environment
 python -m venv venv
-###3️⃣ Activate the Virtual Environment
+3️⃣ Activate the Virtual Environment
 Windows:
 venv\Scripts\activate
-###4️⃣ Install Dependencies
+4️⃣ Install Dependencies
 pip install -r requirements.txt
-###5️⃣ Run the Development Server
+5️⃣ Run the Development Server
 python manage.py runserver
 Then open your browser and go to 👉 http://127.0.0.1:8000/
 🧩 Features
